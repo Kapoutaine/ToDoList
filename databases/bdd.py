@@ -25,31 +25,31 @@ class Bdd:
         self.database = sqlite3.connect(database=self.path)
 
         # Creating a dictionary which contains the sql requests
-        self.sql_request_dictionary = {"1": """
+        self.sql_request_dictionary = {"get_all_tasks": """
+SELECT *
+FROM Taches
+                                        """,
+                                       "get_sorted_tasks": """
 SELECT Taches.titre, Categorie.nom, Taches.dateEcheance
 FROM Taches
 INNER JOIN Categorie, Priorite
 ON Categorie.idCategorie = Taches.idCategorie
 WHERE Taches.idPriorite != 3;
                                         """,
-                                       "2": """
+                                       "add_task": """
 INSERT INTO Taches
 (titre, idCategorie, idPriorite, dateEcheance)
 VALUES (?, ?, ?, ?);
                                         """,
-                                       "3": """
+                                       "delete_task": """
 DELETE FROM Taches
 WHERE Taches.titre = ?;
                                 """,
-                                       "4": """
+                                       "update_task": """
 UPDATE Taches
 SET Taches.? = ?
 WHERE ?;
-                                """,
-                                       "5": """
-SELECT *
-FROM Taches
-"""}
+                                """}
 
     def task_sort(self, result):
         result.sort(key=lambda l: self.get_remaining_time(l[0]))
@@ -67,10 +67,10 @@ FROM Taches
 
         return delta.days
 
-    def create_command(self, id_choice: int, parameters=None):
+    def request(self, choice: str, parameters=None):
         """
         Create a command and execute it
-        :param id_choice: integer
+        :param choice: string
         :param parameters: list
         :return: string
         """
@@ -82,13 +82,13 @@ FROM Taches
         results = []
 
         try:
-            command = self.sql_request_dictionary[str(id_choice)]
+            command = self.sql_request_dictionary[str(choice)]
         except KeyError:
             return "Choice does not exist"
 
         results += self.execute(command=command, parameters=parameters)
 
-        if id_choice == 1:
+        if choice == "get_sorted_tasks":
             results = self.task_sort(results)
             return results
 
@@ -111,5 +111,5 @@ FROM Taches
 # Mise au point de la classe Bdd seule
 if __name__ == "__main__":
     data_base = Bdd(file_name="taches")
-    my_result = data_base.create_command(5)
+    my_result = data_base.request("get_all_tasks")
     print(my_result)
