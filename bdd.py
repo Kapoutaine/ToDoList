@@ -43,19 +43,33 @@ WHERE Taches.titre = ?;
                                 """,
                                        "4": """
 UPDATE Taches
-SET Taches.? = "valeur"
+SET Taches.? = ?
 WHERE ?;
-                                        """}
+                                """,
+                                       "5": """
+SELECT *
+FROM Taches
+"""}
 
     def task_sort(self, result):
-        result.sort(key=lambda l: l[0])
+        result.sort(key=lambda l: self.get_remaining_time(l[0]))
+        return result
 
-    def get_remaining_time(self, date):
-        
+    @staticmethod
+    def get_remaining_time(date):
 
+        date = date.split(sep="/")
+        date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+
+        today = datetime.date.today()
+
+        delta = date - today
+
+        return delta.days
 
     def create_command(self, id_choice: int, parameters=None):
         """
+        Create a command and execute it
         :param id_choice: integer
         :param parameters: list
         :return: string
@@ -72,12 +86,11 @@ WHERE ?;
         except KeyError:
             return "Choice does not exist"
 
-        if id_choice == 3:
-            results += self.execute(command=command[0], parameters=parameters)
-            results += self.execute(command=command[1], parameters=parameters)
-            return results
-
         results += self.execute(command=command, parameters=parameters)
+
+        if id_choice == 1:
+            results = self.task_sort(results)
+            return results
 
         return results
 
@@ -92,14 +105,11 @@ WHERE ?;
         cursor = self.database.cursor()  # Placing cursor
         result_list = cursor.execute(command, parameters)  # Execute a sql request
 
-        return result_list
+        return result_list.fetchall()
 
 
 # Mise au point de la classe Bdd seule
 if __name__ == "__main__":
     data_base = Bdd(file_name="taches")
-    my_result = data_base.create_command(1)
-    for row in my_result:
-        print(row)
-
-    print(str(datetime.datetime.now())[:10])
+    my_result = data_base.create_command(5)
+    print(my_result)
