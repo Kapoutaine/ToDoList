@@ -1,0 +1,49 @@
+<!-- On hérite du template de base -->
+{% extends "base.html" %}
+
+<!-- On ajoute notre propre contenu -->
+{% block contenu %}
+    <h1>Vos tâches 📚</h1>
+    <br>
+
+    <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Tâches</th>
+        <th scope="col">Catégories</th>
+        <th scope="col">Etat</th>
+        <th scope="col">Temps restant</th>
+        <th scope="col">Modifier</th>
+        <th scope="col">Supprimer</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>Faire la cuisine</td>
+        <td></td>
+        <td>En cours</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>Jouer à RL</td>
+        <td></td>
+        <td>Fini</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>Flappy Bird</td>
+        <td></td>
+        <td>En cours</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+    </table>
+{% endblock %}
