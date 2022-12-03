@@ -6,7 +6,6 @@ gérant une liste de tâches à faire
 
 # Librairie(s) utilisée(s)
 import sqlite3
-import os
 import datetime
 
 
@@ -19,7 +18,7 @@ class Bdd:
         Initialize the class and open DB
         :param file_name: string
         """
-        self.path = os.path.abspath(f"{file_name}.sqlite")
+        self.path = f"databases/{file_name}.sqlite"
 
         # Open the database
         self.database = sqlite3.connect(database=self.path)
@@ -57,6 +56,9 @@ WHERE ?;
 
     @staticmethod
     def get_remaining_time(date):
+        """
+        Calculate how many days we are from a given date
+        """
 
         date = date.split(sep="/")
         date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
