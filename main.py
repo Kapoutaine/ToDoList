@@ -14,10 +14,9 @@ import secrets
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.config['SECRET_KEY'] = secrets.token_hex(16)
 
-db = bdd.Bdd(file_name="taches")
-
-results = db.request("get_all_tasks")
-
+# Obtentions des tâches de la base de données
+results = bdd.Bdd(file_name="taches")
+results = results.request("get_all_tasks")
 
 # Les routes associées aux fonctions
 @app.route("/")
@@ -32,5 +31,4 @@ def accueillir():
 
 # Lancement du serveur
 if __name__ == "__main__":
-    """app.run(host="0.0.0.0", port=1664, threaded=True, debug=True)"""
-
+    app.run(host="0.0.0.0", port=1664, threaded=True, debug=True)
