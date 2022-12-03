@@ -16,34 +16,21 @@
         <th scope="col">Temps restant</th>
         <th scope="col">Modifier</th>
         <th scope="col">Supprimer</th>
-
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Faire la cuisine</td>
-        <td></td>
-        <td>En cours</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Jouer à RL</td>
-        <td></td>
-        <td>Fini</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Flappy Bird</td>
-        <td></td>
-        <td>En cours</td>
-        <td></td>
-        <td></td>
-      </tr>
+    {% for i in results %}
+    <tr>
+      <th scope="row">{{ results.index(i) + 1 }}</th>
+      <td>{{ i[0] }}</td>
+      <td>{{ i[1] }}</td>
+      <td>{{ i[2] }}</td>
+      <td>{{ i[4] }}</td>
+      <td></td>
+      <td></td>
+    </tr>
+    {% endfor %}
     </tbody>
     </table>
+
 {% endblock %}
