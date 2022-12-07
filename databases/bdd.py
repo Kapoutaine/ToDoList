@@ -119,6 +119,6 @@ WHERE Taches.idTache = ?;
 # Mise au point de la classe Bdd seule
 if __name__ == "__main__":
     data_base = Bdd(file_name="taches")
-    data_base.request("add", ["jouer a ow SAISON 2", 2, 1, "2022/12/25", ])
+    data_base.request("delete", [7, ])
     my_result = data_base.request("get_all")
     print(my_result)

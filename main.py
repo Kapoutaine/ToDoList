@@ -45,8 +45,10 @@ def ajouter():
     """Ajoute une tache"""
     database = bdd.Bdd(file_name="taches")
 
-    nom_tache = request.form["name"]
-    id_categorie = request.form["categorie"]
+    parameters = \
+        [request.form["name"], request.form["categorie"], request.form["priorite"], request.form["date_echeance"], ]
+
+    database.request("add")
 
 
 # Lancement du serveur
