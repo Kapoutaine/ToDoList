@@ -15,18 +15,38 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 app.config['SECRET_KEY'] = secrets.token_hex(16)
 
 # Obtentions des tâches de la base de données
-results = bdd.Bdd(file_name="taches")
-results = results.request("get_all_tasks")
 
 # Les routes associées aux fonctions
 @app.route("/")
 def accueillir():
     """Gère l'accueil des utilisateurs"""
-    
+
+    database = bdd.Bdd(file_name="taches")
+
+    results = database.request("get_all")
+
     # Rendu de la vue
     return render_template("accueil.html", results=results)
 
-# TODO : ajoutez de nouvelles routes associées à des fonctions "contrôleur" Python
+
+@app.route("/supprimer", methods=["POST"])
+def supprimer():
+    """Supprime un tache de la base de données"""
+    database = bdd.Bdd(file_name="taches")
+    id_tache = request.form["idTache"]
+
+    database.request("delete", [id_tache])
+
+    return render_template("accueil.html")
+
+
+@app.route("/ajouter", methods=["POST"])
+def ajouter():
+    """Ajoute une tache"""
+    database = bdd.Bdd(file_name="taches")
+
+    nom_tache = request.form["name"]
+    id_categorie = request.form["categorie"]
 
 
 # Lancement du serveur

@@ -26,13 +26,16 @@
     <tbody>
     {% for tache in results %}
     <tr>
-      <th scope="row">{{ results.index(i) + 1 }}</th>
+      <th scope="row">{{ results.index(tache) + 1 }}</th>
       <td>{{ tache[0] }}</td>
       <td>{{ tache[1] }}</td>
       <td>{{ tache[2] }}</td>
       <td>{{ tache[4] }}</td>
       <td></td>
-      <td></td>
+      <td>
+      <form action="/supprimer" method="POST">
+        <button type="submit" class="btn btn-primary btn-sm" name="idTache" value="{{ tache[-1] }}">Supprimer</button>
+      </form></td>
     </tr>
     {% endfor %}
     </tbody>

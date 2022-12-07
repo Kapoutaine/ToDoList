@@ -24,30 +24,30 @@ class Bdd:
         self.database = sqlite3.connect(database=self.path)
 
         # Creating a dictionary which contains the sql requests
-        self.sql_request_dictionary = {"get_all_tasks": """
+        self.sql_request_dictionary = {"get_all": """
 SELECT *
 FROM Taches
                                         """,
-                                       "get_sorted_tasks": """
+                                       "get_sorted": """
 SELECT Taches.titre, Categorie.nom, Taches.dateEcheance
 FROM Taches
 INNER JOIN Categorie, Priorite
 ON Categorie.idCategorie = Taches.idCategorie
 WHERE Taches.idPriorite != 3;
                                         """,
-                                       "add_task": """
+                                       "add": """
 INSERT INTO Taches
 (titre, idCategorie, idPriorite, dateEcheance)
 VALUES (?, ?, ?, ?);
                                         """,
-                                       "delete_task": """
+                                       "delete": """
 DELETE FROM Taches
-WHERE Taches.titre = ?;
+WHERE Taches.idTache = ?;
                                 """,
-                                       "update_task": """
+                                       "update": """
 UPDATE Taches
 SET Taches.? = ?
-WHERE ?;
+WHERE Taches.idTache = ?;
                                 """}
 
     def task_sort(self, result):
@@ -113,5 +113,5 @@ WHERE ?;
 # Mise au point de la classe Bdd seule
 if __name__ == "__main__":
     data_base = Bdd(file_name="taches")
-    my_result = data_base.request("get_all_tasks")
+    my_result = data_base.request("get_all")
     print(my_result)
