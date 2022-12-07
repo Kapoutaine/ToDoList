@@ -5,7 +5,12 @@
 {% block contenu %}
     <h1>Vos tâches 📚</h1>
     <br>
-
+    <!-- Bouton pour déclencher l'action -->
+    <form action="/supprimer" method="POST">
+      <button type="submit" class="btn btn-primary btn-sm">Nouvelle Tâche</button>
+    </form>
+    <br>
+    <!-- Table pour afficher les tâches-->
     <table class="table table-hover">
     <thead>
       <tr>
@@ -19,13 +24,13 @@
       </tr>
     </thead>
     <tbody>
-    {% for i in results %}
+    {% for tache in results %}
     <tr>
       <th scope="row">{{ results.index(i) + 1 }}</th>
-      <td>{{ i[0] }}</td>
-      <td>{{ i[1] }}</td>
-      <td>{{ i[2] }}</td>
-      <td>{{ i[4] }}</td>
+      <td>{{ tache[0] }}</td>
+      <td>{{ tache[1] }}</td>
+      <td>{{ tache[2] }}</td>
+      <td>{{ tache[4] }}</td>
       <td></td>
       <td></td>
     </tr>
