@@ -18,7 +18,7 @@ class Bdd:
         Initialize the class and open DB
         :param file_name: string
         """
-        self.path = f"databases/{file_name}.sqlite"
+        self.path = f"{file_name}.sqlite"
 
         # Open the database
         self.database = sqlite3.connect(database=self.path)
@@ -76,6 +76,10 @@ WHERE Taches.idTache = ?;
         :param parameters: list
         :return: string
         """
+
+        # Open the database
+        # self.database = sqlite3.connect(database=self.path)
+
         # Creating the parameters list if needed
 
         if parameters is None:
@@ -107,12 +111,14 @@ WHERE Taches.idTache = ?;
         cursor = self.database.cursor()  # Placing cursor
         result_list = cursor.execute(command, parameters)  # Execute a sql request
 
+        self.database.commit()
+
         return result_list.fetchall()
 
 
 # Mise au point de la classe Bdd seule
 if __name__ == "__main__":
     data_base = Bdd(file_name="taches")
-    data_base.request("delete", [3, ])
+    data_base.request("add", ["jouer a ow SAISON 2", 2, 1, "2022/12/25", ])
     my_result = data_base.request("get_all")
     print(my_result)
