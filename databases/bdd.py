@@ -113,5 +113,6 @@ WHERE Taches.idTache = ?;
 # Mise au point de la classe Bdd seule
 if __name__ == "__main__":
     data_base = Bdd(file_name="taches")
+    data_base.request("delete", [1, ])
     my_result = data_base.request("get_all")
     print(my_result)

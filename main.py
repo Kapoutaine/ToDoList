@@ -35,7 +35,7 @@ def supprimer():
     database = bdd.Bdd(file_name="taches")
     id_tache = request.form["idTache"]
 
-    database.request("delete", [id_tache])
+    database.request("delete", [id_tache, ])
 
     return render_template("accueil.html")
 
