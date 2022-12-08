@@ -60,6 +60,21 @@ def ajouter():
     return render_template("accueil.html", results=maj())
 
 
+@app.route("/modifier", methods=["POST"])
+def modifier():
+    """Modifie une tache"""
+    # TODO: synchroniser les noms avec les données envoyés par la template
+
+    parameters = \
+        [request.form["name"], request.form["categorie"],
+         request.form["etat"], request.form["priorite"],
+         request.form["date_echeance"], ]
+
+    database.request("update", parameters=parameters)
+
+    return render_template("accueil.html", results=maj())
+
+
 # Lancement du serveur
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=1664, threaded=True, debug=True)
