@@ -16,14 +16,23 @@ app.config['SECRET_KEY'] = secrets.token_hex(16)
 
 # Obtentions des tâches de la base de données
 
+database = bdd.Bdd(file_name="taches")
+
+results = database.request("get_all")
+
+
+# Fonctions pratiques
+def maj():
+    """Retourne les nouvelles taches apres la mise a jour de la base de données"""
+    new_results = database.request("get_all")
+
+    return new_results
+
+
 # Les routes associées aux fonctions
 @app.route("/")
 def accueillir():
     """Gère l'accueil des utilisateurs"""
-
-    database = bdd.Bdd(file_name="taches")
-
-    results = database.request("get_all")
 
     # Rendu de la vue
     return render_template("accueil.html", results=results)
@@ -32,23 +41,23 @@ def accueillir():
 @app.route("/supprimer", methods=["POST"])
 def supprimer():
     """Supprime un tache de la base de données"""
-    database = bdd.Bdd(file_name="taches")
     id_tache = request.form["idTache"]
 
-    database.request("delete", [id_tache, ])
+    database.request("delete", parameters=[id_tache, ])
 
-    return render_template("accueil.html")
+    return render_template("accueil.html", results=maj())
 
 
 @app.route("/ajouter", methods=["POST"])
 def ajouter():
     """Ajoute une tache"""
-    database = bdd.Bdd(file_name="taches")
 
     parameters = \
         [request.form["name"], request.form["categorie"], request.form["priorite"], request.form["date_echeance"], ]
 
-    database.request("add")
+    database.request("add", parameters=parameters)
+
+    return render_template("accueil.html", results=maj())
 
 
 # Lancement du serveur
