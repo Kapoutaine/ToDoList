@@ -46,7 +46,8 @@ WHERE Taches.idTache = ?;
                                 """,
                                        "update": """
 UPDATE Taches
-SET Taches.? = ?
+SET Taches.titre = ?, Taches.idCategorie = ?, Taches.idEtat = ?,
+Taches.idPriorite = ?, Taches.dateEcheance = ?
 WHERE Taches.idTache = ?;
                                 """}
 
