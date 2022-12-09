@@ -18,7 +18,7 @@ class Bdd:
         Initialize the class and open DB
         :param file_name: string
         """
-        self.path = f"{file_name}.sqlite"
+        self.path = f"databases/{file_name}.sqlite"
 
         # Open the database
         self.database = sqlite3.connect(database=self.path)
