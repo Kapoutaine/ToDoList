@@ -35,7 +35,7 @@ def accueillir():
     """Gère l'accueil des utilisateurs"""
 
     # Rendu de la vue
-    return render_template("accueil.html", results=results)
+    return render_template("accueil.html", results=maj())
 
 
 @app.route("/supprimer", methods=["POST"])
@@ -44,8 +44,7 @@ def supprimer():
     id_tache = request.form["idTache"]
 
     database.request("delete", parameters=[id_tache, ])
-
-    return render_template("accueil.html", results=maj())
+    return redirect(request.referrer)
 
 
 @app.route("/ajouter", methods=["POST"])
