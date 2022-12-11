@@ -21,7 +21,7 @@ class Bdd:
         self.path = f"databases/{file_name}.sqlite"
 
         # Open the database
-        self.database = sqlite3.connect(database=self.path)
+        self.database = sqlite3.connect(database=self.path, check_same_thread=False)
 
         # Creating a dictionary which contains the sql requests
         self.sql_request_dictionary = {"get_all": """
@@ -116,10 +116,9 @@ WHERE Taches.idTache = ?;
 
         return result_list.fetchall()
 
-
 # Mise au point de la classe Bdd seule
 if __name__ == "__main__":
     data_base = Bdd(file_name="taches")
-    data_base.request("delete", [7, ])
+    data_base.request("add", ["Faire les devoirs",1,1,2022/8/16, ])
     my_result = data_base.request("get_all")
     print(my_result)
