@@ -56,7 +56,7 @@ def ajouter():
 
     database.request("add", parameters=parameters)
 
-    return render_template("accueil.html", results=maj())
+    return redirect(request.referrer)
 
 
 @app.route("/modifier", methods=["POST"])
