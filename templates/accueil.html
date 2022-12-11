@@ -7,6 +7,15 @@
     <br>
     <!-- Bouton pour déclencher l'action -->
     <form action="/ajouter" method="POST">
+      <label>Titre:</label>
+      <input type="text" name="name" size="14"/>
+      <label>Catégorie:</label>
+      <input type="text" name="categorie" size="1"/>
+      <label>Priorité:</label>
+      <input type="text" name="priorite" size="1"/>
+      <label>Fin de la tâche:</label>
+      <input type="date" name="date_echeance"/>
+      <!--Submit des données-->
       <button type="submit" class="btn btn-primary btn-sm">Nouvelle Tâche</button>
     </form>
     <br>
