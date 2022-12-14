@@ -28,7 +28,8 @@ class Bdd:
 SELECT 
 Taches.titre, Categorie.nom, Etat.nom,
 Priorite.nom, Taches.dateEcheance,
-julianday(Taches.dateEcheance) - julianday('now'), Taches.idTache
+CAST((julianday(Taches.dateEcheance) - julianday('now')) as INT),
+Taches.idTache
 FROM Taches
 INNER JOIN Categorie, Etat, Priorite
 WHERE Taches.idCategorie = Categorie.idCategorie
@@ -104,9 +105,6 @@ WHERE Taches.idTache = ?;
 
         if choice == "get_sorted_tasks":
             results = self.task_sort(results)
-        elif choice == "get_all":
-            for result in results:
-                result[4] = self.get_remaining_time(result[4])
 
         return results
 
