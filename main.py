@@ -62,7 +62,6 @@ def ajouter():
 @app.route("/modifier", methods=["POST"])
 def modifier():
     """Modifie une tache"""
-    # TODO: synchroniser les noms avec les données envoyés par la template
 
     parameters = \
         [request.form["name"], request.form["categorie"],
@@ -72,6 +71,15 @@ def modifier():
     database.request("update", parameters=parameters)
 
     return render_template("accueil.html", results=maj())
+
+
+@app.route("/ouvrir_modfier", methods=["POST"])
+def ouvrir_modifier():
+    """Ouvre la page pour modifier une tache"""
+
+    tache = request.form["tache"]
+
+    return render_template("modifier.html", results=tache)
 
 
 # Lancement du serveur
