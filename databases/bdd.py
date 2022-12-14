@@ -25,8 +25,14 @@ class Bdd:
 
         # Creating a dictionary which contains the sql requests
         self.sql_request_dictionary = {"get_all": """
-SELECT *
+SELECT 
+Taches.titre, Categorie.nom, Etat.nom,
+Priorite.nom, Taches.dateEcheance, Taches.idTache
 FROM Taches
+INNER JOIN Categorie, Etat, Priorite
+WHERE Taches.idCategorie = Categorie.idCategorie
+AND Taches.idEtat = Etat.idEtat
+AND Taches.idPriorite = Priorite.idPriorite;
                                         """,
                                        "get_sorted": """
 SELECT Taches.titre, Categorie.nom, Taches.dateEcheance
@@ -61,7 +67,7 @@ WHERE Taches.idTache = ?;
         Calculate how many days we are from a given date
         """
 
-        date = date.split(sep="/")
+        date = date.split(sep="-")
         date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
 
         today = datetime.date.today()
@@ -97,7 +103,9 @@ WHERE Taches.idTache = ?;
 
         if choice == "get_sorted_tasks":
             results = self.task_sort(results)
-            return results
+        elif choice == "get_all":
+            for result in results:
+                result[4] = self.get_remaining_time(result[4])
 
         return results
 
@@ -119,6 +127,6 @@ WHERE Taches.idTache = ?;
 # Mise au point de la classe Bdd seule
 if __name__ == "__main__":
     data_base = Bdd(file_name="taches")
-    data_base.request("add", ["Faire les devoirs",1,1,2022/8/16, ])
+    # data_base.request("add", ["Faire les devoirs",1,1, "2022/08/16", ])
     my_result = data_base.request("get_all")
     print(my_result)
