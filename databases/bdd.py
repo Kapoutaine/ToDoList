@@ -27,7 +27,7 @@ class Bdd:
         self.sql_request_dictionary = {"get_all": """
 SELECT 
 Taches.titre, Categorie.nom, Etat.nom,
-Priorite.nom, Taches.dateEcheance,
+Priorite.nom, Taches.dateEcheance, Taches.dateFin,
 CAST((julianday(Taches.dateEcheance) - julianday('now')) as INT),
 Taches.idTache
 FROM Taches

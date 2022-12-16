@@ -1,0 +1,35 @@
+<!-- On hérite du template de base -->
+{% extends "base.html" %}
+
+<!-- On ajoute notre propre contenu -->
+{% block contenu %}
+    <h1>Accueil</h1>
+    <p>Bienvenue sur l'application <strong>ToDoList</strong> gérant vos tâches</p>
+    <form action="/modifier" method="POST">
+        <label>Titre:</label><br>
+        <input type="text" value={{ tache[0] }} name="name" size="14"/><br>
+        <label>Catégorie:</label><br>
+        <select name="categorie">
+            <option value="1">Travail</option>
+            <option value="2">Maison</option>
+        </select><br>
+        <label>Etat:</label><br>
+        <select name="etat">
+            <option value="1" selected>En cours</option>
+            <option value="2">Terminée</option>
+            <option value="3">Archivée</option>
+        </select><br>
+        <label>Priorité:</label><br>
+        <select name="priorite">
+            <option value="1">Basse</option>
+            <option value="2">Moyenne</option>
+            <option value="3">Haute</option>
+        </select><br>
+        <label>Echeance de la tâche:</label><br>
+        <input type="date" value={{ tache[4] }} name="date_echeance"/><br>
+        <label>Date de fin de tache:</label><br>
+        <input type="date" value={{ tache[5] }} name="date_fin">
+        <!--Submit des données-->
+        <button type="submit" class="btn btn-primary btn-sm">Confirmer la modification</button>
+    </form>
+{% endblock %}
