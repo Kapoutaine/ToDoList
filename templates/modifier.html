@@ -3,11 +3,11 @@
 
 <!-- On ajoute notre propre contenu -->
 {% block contenu %}
-    <h1>Accueil</h1>
-    <p>Bienvenue sur l'application <strong>ToDoList</strong> gérant vos tâches</p>
+    <h1>Modifier la tâche</h1>
+    <p>Modifiez votre <strong>tâche</strong> en remplissant les champs ci-dessous</p>
     <form action="/modifier" method="POST">
         <label>Titre:</label><br>
-        <input type="text" value={{ tache[0] }} name="name" size="14"/><br>
+        <input type="text" value="{{ tache }}" name="name"/><br>
         <label>Catégorie:</label><br>
         <select name="categorie">
             <option value="1">Travail</option>
@@ -26,9 +26,9 @@
             <option value="3">Haute</option>
         </select><br>
         <label>Echeance de la tâche:</label><br>
-        <input type="date" value={{ tache[4] }} name="date_echeance"/><br>
+        <input type="date" name="date_echeance"/><br>
         <label>Date de fin de tache:</label><br>
-        <input type="date" value={{ tache[5] }} name="date_fin">
+        <input type="date" name="date_fin"><br>
         <!--Submit des données-->
         <button type="submit" class="btn btn-primary btn-sm">Confirmer la modification</button>
     </form>

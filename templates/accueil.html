@@ -46,8 +46,12 @@
       <td>{{ tache[0] }}</td>
       <td>{{ tache[1] }}</td>
       <td>{{ tache[2] }}</td>
-      <td>{{ int(tache[5])  }}</td>
-      <td></td>
+      <td>{{ tache[5]  }}</td>
+      <td>
+      <form action="/ouvrir_modfier" method="POST">
+        <button type="submit" class="btn btn-outline-danger" name="tache" value="{{ tache[0] }}">🛠️</button>
+      </form>
+      </td>
       <td>
       <form action="/supprimer" method="POST">
         <button type="submit" class="btn btn-outline-danger" name="idTache" value="{{ tache[-1] }}">❌</button>
