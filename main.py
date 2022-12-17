@@ -44,7 +44,7 @@ def supprimer():
     id_tache = request.form["idTache"]
 
     database.request("delete", parameters=[id_tache, ])
-    return redirect(request.referrer)
+    return render_template("accueil.html", results=maj())
 
 
 @app.route("/ajouter", methods=["POST"])
@@ -56,7 +56,7 @@ def ajouter():
 
     database.request("add", parameters=parameters)
 
-    return redirect(request.referrer)
+    return render_template("accueil.html", results=maj())
 
 
 @app.route("/modifier", methods=["POST"])
@@ -66,9 +66,26 @@ def modifier():
     parameters = \
         [request.form["name"], request.form["categorie"],
          request.form["etat"], request.form["priorite"],
-         request.form["date_echeance"], ]
+         request.form["date_echeance"], request.form["date_fin"], ]
 
-    database.request("update", parameters=parameters)
+    tache = request.form["tache"][1:-1].split(sep=", ")
+
+    for i in range(len(tache)):
+        if tache[i][0] == "'":
+            tache[i] = tache[i][1:-1]
+
+    del tache[-2]
+
+    for j in range(len(parameters)):
+        if parameters[j] != tache[j] and parameters[j] != '':
+            tache[j] = parameters[j]
+
+    if tache[-2] is None:
+        tache[-2] = ""
+
+    print(parameters, tache)
+
+    database.request("update", parameters=tache)
 
     return render_template("accueil.html", results=maj())
 
@@ -77,9 +94,30 @@ def modifier():
 def ouvrir_modifier():
     """Ouvre la page pour modifier une tache"""
 
-    tache = request.form["tache"]
+    tache = request.form["tache"][1:-1].split(sep=", ")
 
-    return render_template("modifier.html", results=tache)
+    for i in range(len(tache)):
+        if tache[i][0] == "'":
+            tache[i] = tache[i][1:-1]
+
+    return render_template("modifier.html", tache=tache)
+
+
+@app.route("/tri", methods=["POST"])
+def tri():
+    """Trie les taches en fonction du choix de l'utilisateur"""
+
+    parameters = \
+        [request.form["categorie"], request.form["etat"], ] + request.form["priorite"].split(sep=",")
+
+    parameters.insert(2, request.form.get(key="archivee", default=0))
+
+    if request.form.get("sorted") == 1:
+        sorted_results = database.request("get_sorted_by_date", parameters=parameters)
+    else:
+        sorted_results = database.request("get_sorted", parameters=parameters)
+
+    return render_template("accueil.html", results=sorted_results)
 
 
 # Lancement du serveur

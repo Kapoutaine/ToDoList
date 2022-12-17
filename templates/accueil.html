@@ -3,25 +3,54 @@
 
 <!-- On ajoute notre propre contenu -->
 {% block contenu %}
+    <script src="my_script.js"></script>
     <h1>Vos tâches 📚</h1>
+    <br>
+    <h2>Triez vos tâches :</h2><br>
+    <form action="/tri" method="POST">
+        <label for="categorie_tri">Catégorie</label>
+        <select name="categorie" id="categorie_tri">
+            <option value="0" selected>Toutes catégories</option>
+            <option value="2">Travail</option>
+            <option value="1">Maison</option>
+        </select>
+        <label for="etat_tri">État</label>
+        <select name="etat" id="etat_tri">
+            <option value="0" selected>Tous les états</option>
+            <option value="2">En cours</option>
+            <option value="1">Terminée</option>
+        </select>
+        <label for="priorite_tri">Priorité</label>
+        <select name="priorite" id="priorite_tri">
+            <option value="0,0" selected>Toutes les priorités</option>
+            <option value="2,3" >Basse</option>
+            <option value="1,3" >Moyenne</option>
+            <option value="1,2" >Haute</option>
+        </select>
+        <label for="archivee">Afficher les tâches archivées</label>
+        <input type="checkbox" id="archivee" name="archivee" value="3" checked>
+        <label for="sorted">Trier par temps restant</label>
+        <input type="checkbox" id="sorted" name="sorted" value="1">
+        <button type="submit" class="btn btn-primary btn-sm">Confirmer et trier</button>
+    </form>
     <br>
     <!-- Bouton pour déclencher l'action -->
     <form action="/ajouter" method="POST">
-      <label>Titre:</label>
-      <input type="text" name="name" size="14"/>
-      <label>Catégorie:</label>
-      <select name="categorie">
+      <label for="titre">Titre:</label>
+      <input type="text" id="titre" name="name" size="14"/>
+      <label for="categorie">Catégorie:</label>
+      <select name="categorie" id="categorie">
         <option value="1">Travail</option>
         <option value="2">Maison</option>
       </select>  
-      <label>Priorité:</label>
-      <select name="priorite">
+      <label for="priorite">Priorité:</label>
+      <select name="priorite" id="priorite">
         <option value="1">Basse</option>
         <option value="2">Moyenne</option>
         <option value="3">Haute</option>
       </select>  
-      <label>Fin de la tâche:</label>
-      <input type="date" name="date_echeance"/>
+      <label for="date">Fin de la tâche:</label>
+      <input type="date" name="date_echeance" id="date"/>
       <!--Submit des données-->
       <button type="submit" class="btn btn-primary btn-sm">Nouvelle Tâche</button>
     </form>
@@ -31,9 +60,10 @@
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">Tâches</th>
-        <th scope="col">Catégories</th>
+        <th scope="col">Tâche</th>
+        <th scope="col">Catégorie</th>
         <th scope="col">Etat</th>
+        <th scope="col">Priorité</th>
         <th scope="col">Temps restant</th>
         <th scope="col">Modifier</th>
         <th scope="col">Supprimer</th>
@@ -46,10 +76,13 @@
       <td>{{ tache[0] }}</td>
       <td>{{ tache[1] }}</td>
       <td>{{ tache[2] }}</td>
-      <td>{{ tache[5]  }}</td>
+      <td>{{ tache[3] }}</td>
+      <td>Il vous reste {{ tache[6]+1 }} jour(s)<br> {{ tache[4] }}</td>
       <td>
       <form action="/ouvrir_modfier" method="POST">
-        <button type="submit" class="btn btn-outline-danger" name="tache" value="{{ tache[0] }}">🛠️</button>
+        <button
+                type="submit" class="btn btn-outline-danger" name="tache" value="{{ tache }}">🛠️
+        </button>
       </form>
       </td>
       <td>
@@ -60,5 +93,4 @@
     {% endfor %}
     </tbody>
     </table>
-
 {% endblock %}

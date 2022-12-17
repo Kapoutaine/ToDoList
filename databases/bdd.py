@@ -34,49 +34,52 @@ FROM Taches
 INNER JOIN Categorie, Etat, Priorite
 WHERE Taches.idCategorie = Categorie.idCategorie
 AND Taches.idEtat = Etat.idEtat
-AND Taches.idPriorite = Priorite.idPriorite;
-                                        """,
-                                       "get_sorted": """
-SELECT Taches.titre, Categorie.nom, Taches.dateEcheance
+AND Taches.idPriorite = Priorite.idPriorite;""",
+                                       "get_sorted_by_date": """
+SELECT
+Taches.titre, Categorie.nom, Etat.nom,
+Priorite.nom, Taches.dateEcheance, Taches.dateFin,
+CAST((julianday(Taches.dateEcheance) - julianday('now')) as INT) as tempsRestant,
+Taches.idTache
 FROM Taches
-INNER JOIN Categorie, Priorite
-ON Categorie.idCategorie = Taches.idCategorie
-WHERE Taches.idPriorite != 3;
-                                        """,
+INNER JOIN Categorie, Etat, Priorite
+ON Taches.idCategorie = Categorie.idCategorie
+AND Taches.idEtat = Etat.idEtat
+AND Taches.idPriorite = Priorite.idPriorite
+WHERE Taches.idCategorie != ?
+AND Taches.idEtat != ?
+AND Taches.idEtat != ?
+AND Taches.idPriorite != ?
+AND Taches.idPriorite != ?
+ORDER BY tempsRestant ASC;""",
+                                       "get_sorted":"""
+SELECT
+Taches.titre, Categorie.nom, Etat.nom,
+Priorite.nom, Taches.dateEcheance, Taches.dateFin,
+CAST((julianday(Taches.dateEcheance) - julianday('now')) as INT) as tempsRestant,
+Taches.idTache
+FROM Taches
+INNER JOIN Categorie, Etat, Priorite
+ON Taches.idCategorie = Categorie.idCategorie
+AND Taches.idEtat = Etat.idEtat
+AND Taches.idPriorite = Priorite.idPriorite
+WHERE Taches.idCategorie != ?
+AND Taches.idEtat != ?
+AND Taches.idEtat != ?
+AND Taches.idPriorite != ?
+AND Taches.idPriorite != ?;""",
                                        "add": """
 INSERT INTO Taches
 (titre, idCategorie, idPriorite, dateEcheance)
-VALUES (?, ?, ?, ?);
-                                        """,
+VALUES (?, ?, ?, ?);""",
                                        "delete": """
 DELETE FROM Taches
-WHERE Taches.idTache = ?;
-                                """,
+WHERE Taches.idTache = ?;""",
                                        "update": """
 UPDATE Taches
-SET Taches.titre = ?, Taches.idCategorie = ?, Taches.idEtat = ?,
-Taches.idPriorite = ?, Taches.dateEcheance = ?
-WHERE Taches.idTache = ?;
-                                """}
-
-    def task_sort(self, result):
-        result.sort(key=lambda l: self.get_remaining_time(l[0]))
-        return result
-
-    @staticmethod
-    def get_remaining_time(date):
-        """
-        Calculate how many days we are from a given date
-        """
-
-        date = date.split(sep="-")
-        date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
-
-        today = datetime.date.today()
-
-        delta = date - today
-
-        return delta.days
+SET titre = ?, idCategorie = ?, idEtat = ?,
+idPriorite = ?, dateEcheance = ?, dateFin = ?
+WHERE idTache = ?;"""}
 
     def request(self, choice: str, parameters=None):
         """
@@ -103,9 +106,6 @@ WHERE Taches.idTache = ?;
 
         results += self.execute(command=command, parameters=parameters)
 
-        if choice == "get_sorted_tasks":
-            results = self.task_sort(results)
-
         return results
 
     def execute(self, command, parameters):
@@ -122,6 +122,7 @@ WHERE Taches.idTache = ?;
         self.database.commit()
 
         return result_list.fetchall()
+
 
 # Mise au point de la classe Bdd seule
 if __name__ == "__main__":
