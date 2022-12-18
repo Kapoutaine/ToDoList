@@ -37,6 +37,11 @@ def accueillir():
     return render_template("accueil.html", results=maj())
 
 
+@app.route("/reinitialiser", methods=["POST"])
+def reinitialiser():
+    """Renvoie a la page principale sans filtre ni tri"""
+
+    return render_template("accueil.html", results=maj())
 @app.route("/supprimer", methods=["POST"])
 def supprimer():
     """Supprime un tache de la base de données"""

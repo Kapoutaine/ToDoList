@@ -27,7 +27,7 @@
         <td>{{ tache[1] }}</td>
         <td>{{ tache[2] }}</td>
         <td>{{ tache[3] }}</td>
-        <td>Il vous reste {{ tache[6]+1 }} jour(s)<br> {{ tache[4] }}</td>
+        <td id="{{ tache[6]+1 }}" class="temps">Il vous reste {{ tache[6]+1 }} jour(s)<br> {{ tache[4] }}</td>
         <td>
             <form action="/ouvrir_modfier" method="POST">
                 <button
@@ -37,7 +37,8 @@
         </td>
         <td>
             <form action="/supprimer" method="POST">
-                <button type="submit" class="btn btn-outline-danger" name="idTache" value="{{ tache[-1] }}">❌</button>
+                <button type="submit" class="btn btn-outline-danger" name="idTache" value="{{ tache[-1] }}"
+                        onclick="SendNotif('a bien été supprimée.', task_name='{{ tache[0] }}')">❌</button>
             </form>
         </td>
     </tr>
@@ -48,9 +49,10 @@
     <h5>Filtrer et trier
         <button class="btn btn_light btn-lg" id="buttonFiltrer" onclick="unhideFiltrer()">→</button>
     </h5>
-    <form action="/" method="POST">
+    <form action="/reinitialiser" method="POST" id="reinitialiser">
         <button
-            type="submit" class="btn btn-outline-success">Réinitialiser les filtres</button>
+                type="submit" class="btn btn-outline-success">Réinitialiser les filtres
+        </button>
     </form>
 </div>
 <div id="divFiltrer">
@@ -107,16 +109,25 @@
         <input type="date" name="date_echeance" id="date"/>
         <br>
         <!--Submit des données-->
-        <button type="submit" class="btn btn-primary btn-sm">Nouvelle Tâche</button>
+        <button type="submit" class="btn btn-primary btn-sm" onclick="SendNotif('a bien été créée.',
+         task_name=document.getElementById('titre').textContent)">Nouvelle Tâche
+        </button>
     </form>
 </div>
 <br>
 <script>
+    Notification.requestPermission()
+
+    function SendNotif(message, task_name) {
+        new Notification("Notification ToDoList", "La tâche" + task_name + message)
+    }
+
     function chooseArchivee() {
         const checkbox = document.getElementById("archivee")
         const select = document.getElementById("etat_tri")
         checkbox.checked = (select.textContent === "Tous les états")
     }
+
     function unhideFiltrer() {
         const button = document.getElementById("buttonFiltrer")
         const div = document.getElementById("divFiltrer")
@@ -152,5 +163,14 @@
 
     div = document.getElementById("divAjouter");
     div.setAttribute('hidden', 'true');
+
+    const elt = document.getElementsByClassName("temps")
+    for (let i=0; i<elt.length; i++) {
+        if (parseInt(elt.item(i).id, 10) <= 0) {
+            elt.item(i).className = "retard"
+            elt.item(i).textContent = "EN RETARD\n" + elt.item(i).textContent
+        }
+    }
+
 </script>
 {% endblock %}

@@ -33,11 +33,18 @@
     <label for="date_fin">Date de fin de tache:</label><br>
     <input type="date" name="date_fin" id="date_fin" onchange="testDisable()"><br>
     <!--Submit des données-->
-    <button type="submit" id="submit" class="btn btn-primary btn-sm" name="tache" value="{{tache}}">Confirmer la
-        modification
+    <button type="submit" id="submit" class="btn btn-primary btn-sm" name="tache" value="{{tache}}"
+            onclick="SendNotif('a bien été modifiée.', task_name=document.getElementById('titre').textContent)">
+        Confirmer la modification
     </button>
 </form>
 <script>
+    Notification.requestPermission()
+
+    function SendNotif(message, task_name) {
+        new Notification("Notification ToDoList", "La tâche" + task_name + message)
+    }
+
     function testDisable() {
         const etat = document.getElementById("etat");
         const dateElt = document.getElementById("date_fin");
