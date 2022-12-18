@@ -6,7 +6,6 @@ gérant une liste de tâches à faire
 
 # Librairie(s) utilisée(s)
 import sqlite3
-import datetime
 
 
 # La classe
@@ -52,7 +51,7 @@ AND Taches.idEtat != ?
 AND Taches.idPriorite != ?
 AND Taches.idPriorite != ?
 ORDER BY tempsRestant ASC;""",
-                                       "get_sorted":"""
+                                       "get_sorted": """
 SELECT
 Taches.titre, Categorie.nom, Etat.nom,
 Priorite.nom, Taches.dateEcheance, Taches.dateFin,
@@ -115,7 +114,6 @@ WHERE idTache = ?;"""}
         :param parameters: Iterable
         :return: tuple
         """
-
         cursor = self.database.cursor()  # Placing cursor
         result_list = cursor.execute(command, parameters)  # Execute a sql request
 

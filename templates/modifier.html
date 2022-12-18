@@ -3,37 +3,73 @@
 
 <!-- On ajoute notre propre contenu -->
 {% block contenu %}
-    <h1>Modifier la tâche</h1>
-    <p>Modifiez votre <strong>tâche</strong> en remplissant les champs ci-dessous</p>
-    <form action="/modifier" method="POST">
-        <label for="titre">Titre:</label><br>
-        <input type="text" id="titre" value="{{ tache[0] }}" name="name"/><br>
-        <label for="selection_categorie">Catégorie:</label><br>
-        <select name="categorie" id="selection_categorie">
-            <option value="1" id="travail">Travail</option>
-            <option value="2" id="maison">Maison</option>
-        </select>
-        <br>
-        <label for="etat">Etat:</label><br>
-        <select name="etat" id="etat" onchange="testDisable()">
-            <option value="1">En cours</option>
-            <option value="2">Terminée</option>
-            <option value="3">Archivée</option>
-        </select>
-        <br>
-        <label for="priorite">Priorité:</label><br>
-        <select name="priorite" id="priorite">
-            <option value="1">Basse</option>
-            <option value="2">Moyenne</option>
-            <option value="3">Haute</option>
-        </select>
-        <br>
-        <label for="date_echeance">Echeance de la tâche:</label><br>
-        <input type="date" name="date_echeance" id="date_echeance"/><br>
-        <label for="date_fin">Date de fin de tache:</label><br>
-        <input type="date" name="date_fin" id="date_fin" onchange="testDisable()"><br>
-        <!--Submit des données-->
-        <button type="submit" id="submit" class="btn btn-primary btn-sm" name="tache" value="{{tache}}">Confirmer la modification</button>
-    </form>
-    <script src="my_script.js"></script>
+<h1>Modifier la tâche</h1>
+<p>Modifiez votre <strong>tâche</strong> en remplissant les champs ci-dessous</p>
+<form action="/modifier" method="POST">
+    <label for="titre">Titre:</label><br>
+    <input type="text" id="titre" value="{{ tache[0] }}" name="name"/><br>
+    <label for="selection_categorie">Catégorie:</label><br>
+    <select name="categorie" id="selection_categorie">
+        <option value="1" id="travail">Travail</option>
+        <option value="2" id="maison">Maison</option>
+    </select>
+    <br>
+    <label for="etat">Etat:</label><br>
+    <select name="etat" id="etat" onchange="testDisable()">
+        <option value="1">En cours</option>
+        <option value="2">Terminée</option>
+        <option value="3">Archivée</option>
+    </select>
+    <br>
+    <label for="priorite">Priorité:</label><br>
+    <select name="priorite" id="priorite">
+        <option value="1">Basse</option>
+        <option value="2">Moyenne</option>
+        <option value="3">Haute</option>
+    </select>
+    <br>
+    <label for="date_echeance">Echeance de la tâche:</label><br>
+    <input type="date" name="date_echeance" id="date_echeance"/><br>
+    <label for="date_fin">Date de fin de tache:</label><br>
+    <input type="date" name="date_fin" id="date_fin" onchange="testDisable()"><br>
+    <!--Submit des données-->
+    <button type="submit" id="submit" class="btn btn-primary btn-sm" name="tache" value="{{tache}}">Confirmer la
+        modification
+    </button>
+</form>
+<script>
+    function testDisable() {
+        const etat = document.getElementById("etat");
+        const dateElt = document.getElementById("date_fin");
+        const date = new Date();
+        const current_date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        if (etat.value !== "1" && dateElt.value === "") {
+            dateElt.value = current_date
+        }
+    }
+
+    let selection = document.getElementById("selection_categorie");
+    if ("{{ tache[1] }}" === "Travail") {
+        selection.value = "1";
+    } else {
+        selection.value = "2";
+    }
+    selection = document.getElementById("priorite");
+    if ("{{ tache[3] }}" === "Basse") {
+        selection.selectedIndex = 0;
+    } else if ("{{ tache[3] }}" === "Moyenne") {
+        selection.selectedIndex = 1;
+    } else {
+        selection.selectedIndex = 2;
+    }
+    selection = document.getElementById("etat");
+    if ("{{ tache[2] }}" === "En cours") {
+        selection.selectedIndex = 0;
+    } else if ("{{ tache[2] }}" === "Terminée") {
+        selection.selectedIndex = 1;
+    } else {
+        selection.selectedIndex = 2;
+    }
+    testDisable()
+</script>
 {% endblock %}

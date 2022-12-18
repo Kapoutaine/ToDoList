@@ -9,7 +9,6 @@ from flask import *
 from databases import bdd
 import secrets
 
-
 # Création des objets Flask et Bdd
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.config['SECRET_KEY'] = secrets.token_hex(16)
@@ -44,6 +43,7 @@ def supprimer():
     id_tache = request.form["idTache"]
 
     database.request("delete", parameters=[id_tache, ])
+
     return render_template("accueil.html", results=maj())
 
 
@@ -110,9 +110,9 @@ def tri():
     parameters = \
         [request.form["categorie"], request.form["etat"], ] + request.form["priorite"].split(sep=",")
 
-    parameters.insert(2, request.form.get(key="archivee", default=0))
+    parameters.insert(2, request.form.get(key="archivee", default=3))
 
-    if request.form.get("sorted") == 1:
+    if request.form.get("sorted", 0) == "1":
         sorted_results = database.request("get_sorted_by_date", parameters=parameters)
     else:
         sorted_results = database.request("get_sorted", parameters=parameters)
