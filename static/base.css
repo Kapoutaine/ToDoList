@@ -9,3 +9,8 @@
     color: red;
     font-weight: bold;
 }
+
+hr {
+    margin-top: 0px;
+    margin-bottom: 30px;
+}

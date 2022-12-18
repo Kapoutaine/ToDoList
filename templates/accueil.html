@@ -23,11 +23,27 @@
     {% for tache in results %}
     <tr>
         <th scope="row">{{ results.index(tache) + 1 }}</th>
+        {% if tache[2] == 'En cours' %}
         <td>{{ tache[0] }}</td>
+        {% else %}
+        <td><s>{{ tache[0] }}</s></td>
+        {% endif %}
         <td>{{ tache[1] }}</td>
         <td>{{ tache[2] }}</td>
-        <td>{{ tache[3] }}</td>
-        <td id="{{ tache[6]+1 }}" class="temps">Il vous reste {{ tache[6]+1 }} jour(s)<br> {{ tache[4] }}</td>
+        {% if tache[3] == 'Basse' %}}
+        <td>🟢</td>
+        {% elif tache[3] == 'Moyenne' %}
+        <td>🟡</td>
+        {% else %}
+        <td>🔴</td>
+        {% endif %}
+        {% if tache[6]+1 > 0 and tache[2] == 'En cours' %}}
+        <td>Il vous reste {{ tache[6]+1 }} jour(s)<br> {{ tache[4] }}</td>
+        {% elif tache[6]+1 <= 0 and tache[2] == 'En cours'%}
+        <td class="retard">Vous etes en retard de {{ -tache[6] }} jour(s)<br> {{ tache[4] }}</td>
+        {% else %}
+        <td>La tâche a été terminée le {{ tache[5] }}</td>
+        {% endif %}
         <td>
             <form action="/ouvrir_modfier" method="POST">
                 <button
@@ -38,13 +54,44 @@
         <td>
             <form action="/supprimer" method="POST">
                 <button type="submit" class="btn btn-outline-danger" name="idTache" value="{{ tache[-1] }}"
-                        onclick="SendNotif('a bien été supprimée.', task_name='{{ tache[0] }}')">❌</button>
+                        onclick="SendNotif('a bien été supprimée.', task_name='{{ tache[0] }}')">❌
+                </button>
             </form>
         </td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
+<!-- Bouton pour déclencher l'action -->
+<h5>Ajouter une tache
+    <button class="btn btn_light btn-lg" id="buttonAjouter" onclick="unhideAjouter()">→</button>
+</h5>
+<br>
+<div id="divAjouter">
+    <form action="/ajouter" method="POST">
+        <label for="titre">Titre:</label>
+        <input type="text" id="titre" name="name" size="14"/>
+        <label for="categorie">Catégorie:</label>
+        <select name="categorie" id="categorie">
+            <option value="1">Travail</option>
+            <option value="2">Maison</option>
+        </select>
+        <label for="priorite">Priorité:</label>
+        <select name="priorite" id="priorite">
+            <option value="1">Basse</option>
+            <option value="2">Moyenne</option>
+            <option value="3">Haute</option>
+        </select>
+        <label for="date">Fin de la tâche:</label>
+        <input type="date" name="date_echeance" id="date"/>
+        <br>
+        <!--Submit des données-->
+        <button type="submit" class="btn btn-primary btn-sm" onclick="SendNotif('a bien été créée.',
+         task_name=document.getElementById('titre').textContent)">Nouvelle Tâche
+        </button>
+    </form>
+</div>
+<hr>
 <div>
     <h5>Filtrer et trier
         <button class="btn btn_light btn-lg" id="buttonFiltrer" onclick="unhideFiltrer()">→</button>
@@ -79,39 +126,9 @@
         <label for="archivee">Afficher les tâches archivées</label>
         <input type="checkbox" id="archivee" name="archivee" value="0" checked>
         <label for="sorted">Trier par temps restant:</label>
-        <input type="checkbox" id="sorted" name="sorted" value="1">
+        <input type="checkbox" id="sorted" name="sorted" value="1" onchange="chooseArchivee()">
         <br>
         <button type="submit" class="btn btn-primary btn-sm">Confirmer et trier</button>
-    </form>
-</div>
-<br>
-<!-- Bouton pour déclencher l'action -->
-<h5>Ajouter une tache
-    <button class="btn btn_light btn-lg" id="buttonAjouter" onclick="unhideAjouter()">→</button>
-</h5>
-<br>
-<div id="divAjouter">
-    <form action="/ajouter" method="POST">
-        <label for="titre">Titre:</label>
-        <input type="text" id="titre" name="name" size="14"/>
-        <label for="categorie">Catégorie:</label>
-        <select name="categorie" id="categorie">
-            <option value="1">Travail</option>
-            <option value="2">Maison</option>
-        </select>
-        <label for="priorite">Priorité:</label>
-        <select name="priorite" id="priorite">
-            <option value="1">Basse</option>
-            <option value="2">Moyenne</option>
-            <option value="3">Haute</option>
-        </select>
-        <label for="date">Fin de la tâche:</label>
-        <input type="date" name="date_echeance" id="date"/>
-        <br>
-        <!--Submit des données-->
-        <button type="submit" class="btn btn-primary btn-sm" onclick="SendNotif('a bien été créée.',
-         task_name=document.getElementById('titre').textContent)">Nouvelle Tâche
-        </button>
     </form>
 </div>
 <br>
@@ -124,8 +141,8 @@
 
     function chooseArchivee() {
         const checkbox = document.getElementById("archivee")
-        const select = document.getElementById("etat_tri")
-        checkbox.checked = (select.textContent === "Tous les états")
+        const sort = document.getElementById("sorted")
+        checkbox.checked = !(sort.checked)
     }
 
     function unhideFiltrer() {
@@ -165,10 +182,10 @@
     div.setAttribute('hidden', 'true');
 
     const elt = document.getElementsByClassName("temps")
-    for (let i=0; i<elt.length; i++) {
+    for (let i = 0; i < elt.length; i++) {
         if (parseInt(elt.item(i).id, 10) <= 0) {
             elt.item(i).className = "retard"
-            elt.item(i).textContent = "EN RETARD\n" + elt.item(i).textContent
+            elt.item(i).textContent = "EN RETARD" + elt.item(i).textContent
         }
     }
 
